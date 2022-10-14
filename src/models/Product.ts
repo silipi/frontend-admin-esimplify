@@ -1,4 +1,4 @@
-export interface Product {
+export default interface Product {
   id: string;
   name: string;
   description: string;
@@ -14,4 +14,5 @@ export interface Product {
     cnpj: string;
     email: string;
   };
+  images: any[];
 }

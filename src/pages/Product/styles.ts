@@ -61,3 +61,15 @@ export const Color = styled.div`
   border: 2px solid #fff;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 `;
+
+export const ImagesContainer = styled.div`
+  display: flex;
+
+  & > div {
+    margin-right: 10px;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+`;

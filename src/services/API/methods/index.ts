@@ -1,11 +1,11 @@
 import toast from 'react-hot-toast';
+
+import products from './products';
+import providers from './providers';
+
 import { caller, notifyError } from '@/services/API';
-
 import { useAppDispatch } from '@/hooks';
-
 import { setAuth } from '@/store/slices/user';
-import { Product } from '@/models/Product';
-import { setProduct, setProducts, setQuickEdit } from '@/store/slices/products';
 
 const methods = () => {
   const dispatch = useAppDispatch();
@@ -54,95 +54,8 @@ const methods = () => {
     }
   };
 
-  const getProducts = async () => {
-    try {
-      const { status, data } = await caller.get('/products');
-
-      if (status === 200) {
-        return dispatch(setProducts(data as Product[]));
-      }
-
-      return dispatch(setProducts([]));
-    } catch (error: any) {
-      notifyError(error);
-      return dispatch(setProducts([]));
-    }
-  };
-
-  const deleteProduct = async (id: string) => {
-    try {
-      const { status, data } = await caller.delete(`/products/${id}`);
-
-      if (status === 200 && data) {
-        toast.success(`Produto excluído com sucesso!`);
-        getProducts();
-      }
-    } catch (error: any) {
-      notifyError(error);
-    }
-  };
-
-  const updateProduct = async (id: string, data: Record<any, any>) => {
-    try {
-      const backendData = { ...data };
-      delete backendData.provider;
-      const { status } = await caller.put(`/products/${id}`, backendData);
-
-      if (status === 204) {
-        toast.success(`Produto atualizado com sucesso!`);
-        getProducts();
-        dispatch(setQuickEdit(null));
-      }
-    } catch (error: any) {
-      notifyError(error);
-    }
-  };
-
-  const getProduct = async (id: string) => {
-    try {
-      const { status, data } = await caller.get(`/products/${id}`);
-
-      if (status === 200) {
-        dispatch(setProduct(data as Product));
-      }
-    } catch (error: any) {
-      notifyError(error);
-    }
-  };
-
-  const createProduct = async (
-    data: Record<any, any>,
-    callback: (responseData: Product) => void,
-  ) => {
-    try {
-      const { status, data: responseData } = await caller.post(
-        `/products`,
-        data,
-      );
-
-      if (status === 201) {
-        toast.success(`Produto criado com sucesso!`);
-        callback(responseData);
-      }
-    } catch (error: any) {
-      notifyError(error);
-    }
-  };
-
-  const getProviders = async () => {
-    try {
-      const { status, data } = await caller.get('/providers');
-
-      if (status === 200) {
-        return data;
-      }
-
-      return [];
-    } catch (error: any) {
-      notifyError(error);
-      return [];
-    }
-  };
+  const productsMethods = products({ dispatch });
+  const providersMethods = providers({ dispatch });
 
   return {
     auth: {
@@ -150,16 +63,8 @@ const methods = () => {
       logout,
       checkAuth,
     },
-    products: {
-      getAll: getProducts,
-      remove: deleteProduct,
-      update: updateProduct,
-      get: getProduct,
-      create: createProduct,
-    },
-    providers: {
-      getAll: getProviders,
-    },
+    products: productsMethods,
+    providers: providersMethods,
   };
 };
 

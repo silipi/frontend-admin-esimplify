@@ -4,10 +4,15 @@ import LoggedIn from '@/layouts/LoggedIn';
 import LoggedOut from '@/layouts/LoggedOut';
 
 import Home from '@/pages/Home';
-import Products from '@/pages/Products';
 import Login from '@/pages/Login';
+
+import Products from '@/pages/Products';
 import Product from '@/pages/Product';
 import ProductCreate from '@/pages/ProductCreate';
+
+import Providers from '@/pages/Providers';
+import Provider from '@/pages/Provider';
+import ProviderCreate from '@/pages/ProviderCreate';
 
 const Router = () => {
   return (
@@ -19,6 +24,9 @@ const Router = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/products/create" element={<ProductCreate />} />
           <Route path="/products/:id" element={<Product />} />
+          <Route path="/providers" element={<Providers />} />
+          <Route path="/providers/create" element={<ProviderCreate />} />
+          <Route path="/providers/:id" element={<Provider />} />
         </Route>
         {/* LoggedOut/public routes */}
         <Route element={<LoggedOut />}>

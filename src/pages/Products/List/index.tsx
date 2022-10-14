@@ -11,8 +11,8 @@ import {
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { methods } from '@/services/API';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { setQuickEdit } from '@/store/slices/products';
-import type { Product } from '@/models/Product';
+import { setProductQuickEdit } from '@/store/slices/products';
+import Product from '@/models/Product';
 import { formatCurrency } from '@/utils';
 
 const List = () => {
@@ -33,7 +33,7 @@ const List = () => {
   };
 
   const handleEdit = (item: Product) => {
-    dispatch(setQuickEdit(item));
+    dispatch(setProductQuickEdit(item));
   };
 
   const handleRedirect = (id: string) => {

@@ -23,6 +23,7 @@ interface Props {
   children: any;
   schema: Yup.AnyObjectSchema;
   defaultValues?: any;
+  [key: string]: any;
 }
 
 type InputProps = {
@@ -46,17 +47,12 @@ const Form: React.FC<Props> & {
   ColorInput: React.FC<any>;
   PriceInput: React.FC<PriceInputProps>;
   NumberInput: React.FC<any>;
-} = ({ onSubmit, children, schema, defaultValues }: Props) => {
+} = ({ onSubmit, children, schema, defaultValues, ...rest }: Props) => {
   const methods = useForm({ resolver: yupResolver(schema), defaultValues });
-
-  useEffect(() => {
-    console.log(methods.watch());
-    console.log(defaultValues);
-  }, []);
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} {...rest}>
         {React.Children.map(children, (child) => {
           return child.props.name
             ? React.cloneElement(child, {
@@ -72,25 +68,10 @@ const Form: React.FC<Props> & {
 
 const Input: React.FC<InputProps> = React.forwardRef(
   ({ type, mask, ...rest }: InputProps, ref) => {
-    const { setValue } = useFormContext();
-
     if (mask) {
       return (
         // @ts-ignore
         <InputBase ref={ref} {...rest} component={InputMask} mask={mask} />
-      );
-    }
-
-    if (type === 'number') {
-      return (
-        <TextInput
-          // @ts-ignore
-          {...rest}
-          onChange={(e) => {
-            setValue(rest.name, e.target.valueAsNumber);
-          }}
-          type="number"
-        />
       );
     }
 

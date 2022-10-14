@@ -1,9 +1,17 @@
 /* eslint-disable react/no-array-index-key */
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { MdEdit } from 'react-icons/md';
 import * as Yup from 'yup';
-import { Box, Button, Divider, Paper, Text, Tooltip } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Divider,
+  Paper,
+  Text,
+  Tooltip,
+  Image,
+} from '@mantine/core';
 import * as S from './styles';
 import { useAppSelector } from '@/hooks';
 import { methods } from '@/services/API';
@@ -15,7 +23,7 @@ const EditSchema = Yup.object({
 }).required();
 
 const Product = () => {
-  const [providers, setProviders] = useState([]);
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const {
     products,
@@ -32,9 +40,7 @@ const Product = () => {
 
   useEffect(() => {
     if (isEditing) {
-      getAllProviders().then((res) => {
-        setProviders(res);
-      });
+      getAllProviders();
     }
   }, [isEditing]);
 
@@ -49,6 +55,12 @@ const Product = () => {
       await products.get(id!);
       setIsEditing(false);
     });
+
+    console.log(data);
+  };
+
+  const goToProvider = () => {
+    navigate(`/providers/${product.providerId}`);
   };
 
   return (
@@ -66,7 +78,7 @@ const Product = () => {
           schema={EditSchema}
           defaultValues={product}
           onSubmit={handleEdit}
-          providers={providers}
+          isEditing
         />
       ) : (
         <>
@@ -90,9 +102,16 @@ const Product = () => {
               <S.Title order={3} weight={500}>
                 Imagens
               </S.Title>
-              <Text italic size="sm">
-                Em desenvolvimento...
-              </Text>
+              <S.ImagesContainer>
+                {product.images.map((image, index) => (
+                  <Image
+                    src={image.location}
+                    key={index}
+                    width={100}
+                    height={100}
+                  />
+                ))}
+              </S.ImagesContainer>
             </Box>
           </S.Section>
 
@@ -115,7 +134,13 @@ const Product = () => {
                 Fornecedor
               </S.Title>
               <div className="row">
-                <Text is="span">Nome: {product.provider.name}</Text>
+                <Text
+                  variant="link"
+                  onClick={goToProvider}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Nome: {product.provider.name}
+                </Text>
                 <Text is="span">CNPJ: {product.provider.cnpj}</Text>
               </div>
               <Text>Email: {product.provider.email}</Text>

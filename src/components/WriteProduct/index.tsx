@@ -1,33 +1,50 @@
 import { useState } from 'react';
 import { Button } from '@mantine/core';
 import Form from '../Form';
+
+import CreateImages from './CreateImages';
+import EditImages from './EditImages';
 import Attributes from './Attributes';
+
+import { useAppSelector } from '@/hooks';
 
 interface Props {
   defaultValues?: any;
   onSubmit: (data: any) => void;
   schema: any;
-  providers: any[];
+  isEditing?: boolean;
 }
 
 const WriteProduct = ({
   onSubmit,
   schema,
   defaultValues,
-  providers,
+  isEditing,
 }: Props) => {
   const [attributes, setAttributes] = useState(defaultValues.attributes || []);
+  const providers = useAppSelector((state) => state.providers.providers);
 
   const handleSubmit = (data: any) => {
     onSubmit({ ...data, attributes });
   };
 
   return (
-    <Form onSubmit={handleSubmit} schema={schema} defaultValues={defaultValues}>
+    <Form
+      onSubmit={handleSubmit}
+      schema={schema}
+      defaultValues={defaultValues}
+      enctype="multipart/form-data"
+      method="post"
+    >
       <Form.Input name="name" label="Nome:" />
       <Form.Textarea name="description" label="Descrição:" />
       <Form.NumberInput name="stock" label="Estoque:" />
       <Form.PriceInput name="price" label="Preço unitário:" />
+      {isEditing ? (
+        <EditImages name="images" />
+      ) : (
+        <CreateImages name="images" />
+      )}
       <Form.ColorInput
         name="color"
         label="Cor:"
@@ -67,6 +84,7 @@ const WriteProduct = ({
 
 WriteProduct.defaultProps = {
   defaultValues: {},
+  isEditing: false,
 };
 
 export default WriteProduct;

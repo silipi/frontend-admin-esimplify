@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button, Modal } from '@mantine/core';
 import * as Yup from 'yup';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { setQuickEdit } from '@/store/slices/products';
+import { setProductQuickEdit } from '@/store/slices/products';
 import Form from '@/components/Form';
 import { methods } from '@/services/API';
 
@@ -10,23 +10,20 @@ const schema = Yup.object().shape({});
 
 const QuickEditModal = () => {
   const dispatch = useAppDispatch();
-  const { products, providers } = methods();
+  const {
+    products,
+    providers: { getAll: getAllProviders },
+  } = methods();
   const quickEditItem = useAppSelector((state) => state.products.quickEdit);
-  const [providersSelect, setProvidersSelect] = useState([]);
-
-  useEffect(() => {
-    console.log(quickEditItem);
-  }, []);
+  const providers = useAppSelector((state) => state.providers.providers);
 
   useEffect(() => {
     if (quickEditItem) {
-      providers.getAll().then((res) => {
-        setProvidersSelect(res);
-      });
+      getAllProviders();
     }
   }, [quickEditItem]);
 
-  if (!quickEditItem || !providersSelect) {
+  if (!quickEditItem || !providers) {
     return null;
   }
 
@@ -40,13 +37,13 @@ const QuickEditModal = () => {
   };
 
   return (
-    <Modal opened onClose={() => dispatch(setQuickEdit(null))}>
+    <Modal opened onClose={() => dispatch(setProductQuickEdit(null))}>
       <Form onSubmit={handleSave} schema={schema} defaultValues={quickEditItem}>
         <Form.Input name="name" label="Nome:" />
         <Form.Select
           name="providerId"
           label="Fornecedor:"
-          data={providersSelect.map((provider: any) => ({
+          data={providers.map((provider: any) => ({
             label: provider.name,
             value: provider.id,
           }))}

@@ -5,13 +5,15 @@ import {
   MdHome,
   MdLocalGroceryStore,
 } from 'react-icons/md';
+import { FaTruckLoading } from 'react-icons/fa';
 import NavbarLink from './NavbarLink';
 import { useNavbar } from '@/hooks';
 import { methods } from '@/services/API';
 
 const links = [
-  { icon: MdHome, label: 'Home', path: '/', exact: true },
-  { icon: MdLocalGroceryStore, label: 'Products', path: '/products' },
+  { icon: MdHome, label: 'Início', path: '/', exact: true },
+  { icon: MdLocalGroceryStore, label: 'Produtos', path: '/products' },
+  { icon: FaTruckLoading, label: 'Fornecedores', path: '/providers' },
 ];
 
 const Navbar = () => {

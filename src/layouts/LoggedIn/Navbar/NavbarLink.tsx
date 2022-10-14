@@ -21,6 +21,7 @@ const NavbarLink = ({
       <UnstyledButton
         onClick={onClick}
         className={cx(classes.link, { [classes.active]: active })}
+        mb={8}
       >
         <Icon size={22} />
       </UnstyledButton>

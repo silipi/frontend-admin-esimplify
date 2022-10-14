@@ -11,7 +11,7 @@ const App = () => {
   return (
     <MantineProvider withNormalizeCSS withGlobalStyles>
       <Provider store={store}>
-        <ModalsProvider>
+        <ModalsProvider labels={{ confirm: 'Confirmar', cancel: 'Cancelar' }}>
           <Router />
           <Toaster />
         </ModalsProvider>

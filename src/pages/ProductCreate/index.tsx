@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import WriteProduct from '@/components/WriteProduct';
 import { methods } from '@/services/API';
-import { Product } from '@/models/Product';
+import Product from '@/models/Product';
 
 const CreateSchema = Yup.object({
   name: Yup.string().required(),
@@ -18,26 +18,27 @@ const ProductCreate = () => {
     providers: { getAll: getAllProviders },
     products: { create: createProduct },
   } = methods();
-  const [providers, setProviders] = useState([]);
 
   useEffect(() => {
-    getAllProviders().then((res) => {
-      setProviders(res);
-    });
+    getAllProviders();
   }, []);
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = async (data: any) => {
     const redirect = (res: Product) => navigate(`/products/${res.id}`);
-    createProduct(data, redirect);
+
+    if (data.images) {
+      const formData = new FormData();
+      for (let i = 0; i < data.images.length; i += 1) {
+        formData.append('image', data.images[i]);
+      }
+      await createProduct({ data, images: formData }, redirect);
+      return;
+    }
+
+    await createProduct({ data }, redirect);
   };
 
-  return (
-    <WriteProduct
-      providers={providers}
-      onSubmit={handleSubmit}
-      schema={CreateSchema}
-    />
-  );
+  return <WriteProduct onSubmit={handleSubmit} schema={CreateSchema} />;
 };
 
 export default ProductCreate;

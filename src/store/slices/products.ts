@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from '@/models/Product';
+import Product from '@/models/Product';
 
 interface ProductsState {
   products: Product[];
@@ -20,7 +20,7 @@ export const productsSlice = createSlice({
     setProducts: (state, action: PayloadAction<Product[]>) => {
       state.products = action.payload;
     },
-    setQuickEdit: (state, action: PayloadAction<Product | null>) => {
+    setProductQuickEdit: (state, action: PayloadAction<Product | null>) => {
       state.quickEdit = action.payload;
     },
     setProduct: (state, action: PayloadAction<Product>) => {
@@ -30,6 +30,7 @@ export const productsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setProducts, setQuickEdit, setProduct } = productsSlice.actions;
+export const { setProducts, setProductQuickEdit, setProduct } =
+  productsSlice.actions;
 
 export default productsSlice.reducer;

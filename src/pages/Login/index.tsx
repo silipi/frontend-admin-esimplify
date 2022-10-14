@@ -38,11 +38,17 @@ const Login = () => {
           <TextInput
             mb="sm"
             name="username"
-            label="Usuário"
+            label="Usuário Admin:"
             placeholder="Insira seu usuário"
             required
           />
-          <PasswordInput mb="sm" name="password" label="Senha" required />
+          <PasswordInput
+            mb="sm"
+            name="password"
+            label="Senha:"
+            required
+            autoComplete="off"
+          />
           <Button fullWidth type="submit">
             Entrar
           </Button>
